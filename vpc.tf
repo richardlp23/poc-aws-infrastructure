@@ -1,28 +1,27 @@
 #VPC with Public and Private Subnets
 resource "aws_vpc" "MyVPC" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
   tags = {
-    Name = "genlogs-vpc"
+    Name = var.vpc_name
   }
 }
-
 resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.MyVPC.id
-  cidr_block              = "10.0.0.0/20"
-  map_public_ip_on_launch = true
-  availability_zone       = "us-east-1a"
+  cidr_block              = var.subnet_public_a_cidr
+  map_public_ip_on_launch = var.map_public_ip_on_launch
+  availability_zone       = var.availability_zone_a
   tags = {
-    Name = "subnet-public1-us-east-1a"
+    Name = var.subnet_public_a_name
   }
 }
 
 resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.MyVPC.id
-  cidr_block              = "10.0.16.0/20"
-  map_public_ip_on_launch = true
-  availability_zone       = "us-east-1b"
+  cidr_block              = var.subnet_public_b_cidr
+  map_public_ip_on_launch = var.map_public_ip_on_launch
+  availability_zone       = var.availability_zone_b
   tags = {
-    Name = "subnet-public2-us-east-1b"
+    Name = var.subnet_public_b_name
   }
 }
 
@@ -40,21 +39,22 @@ resource "aws_route_table_association" "public_b" {
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.MyVPC.id
   tags = {
-    Name = "genlogs-internet-gateway"
+    Name = var.internet_gateway_name
   }
 }
 
 #Route Table Public
 resource "aws_route_table" "public" {
-vpc_id = aws_vpc.MyVPC.id
+  vpc_id = aws_vpc.MyVPC.id
 
-route {
-    cidr_block = "0.0.0.0/0"
+  route {
+    cidr_block = var.route_cidr_block
     gateway_id = aws_internet_gateway.main.id
-}  
-tags = {
-    Name = "public-route-table"
-  } 
+  }
+  tags = {
+    Name = var.route_table_name
+    env  = var.environment
+  }
 }
 
 

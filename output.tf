@@ -1,19 +1,18 @@
 output "aws_instance" {
   value = [
-    aws_instance.app-server-01,
-    aws_instance.app-server-02
-  ] 
-  
+    aws_instance.app-server[*].id # List of instance IDs
+  ]
+
 }
 output "aws_vpc" {
   value = aws_vpc.MyVPC
-} 
+}
 output "aws_subnet" {
   value = [
     aws_subnet.public_a,
     aws_subnet.public_b
   ]
-} 
+}
 output "aws_internet_gateway" {
   value = aws_internet_gateway.main
 }

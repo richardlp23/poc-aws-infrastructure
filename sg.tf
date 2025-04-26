@@ -1,11 +1,9 @@
 resource "aws_security_group" "vpc" {
-  name        = "MyVPC"
-  description = "security group for lab"
-  vpc_id      = aws_vpc.MyVPC.id
+  name   = var.vpc_name
+  vpc_id = aws_vpc.MyVPC.id
   tags = {
-    Name    = "security-group-vpc"
-    env     = "development"
-    details = "web-server-subnet-public"
+    Name = var.security_group_name
+    env  = var.environment
   }
   ingress {
     from_port   = 80
