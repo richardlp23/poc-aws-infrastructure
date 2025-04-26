@@ -1,27 +1,15 @@
-resource "aws_instance" "app-server-01" {
-  ami             = "ami-085ad6ae776d8f09c" # Amazon Linux 2 AMI
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.public_a.id
-  key_name        = "server-key"
-  security_groups = [aws_security_group.vpc.id]
-  monitoring      = true
-  user_data = file("${path.module}/user_data.sh")
+resource "aws_instance" "app-server" {
+  count                  = var.instance_count
+  ami                    = var.ami_id
+  instance_type          = var.ec2_instance_type
+  vpc_security_group_ids = var.security_groups
+  subnet_id              = aws_subnet.public_b.id
+  key_name               = var.key_name
+  security_groups        = [aws_security_group.vpc.id]
+  monitoring             = true
+  user_data              = file("${path.module}/user_data.sh")
   tags = {
-    Name        = "web-server-east-1a"
-    environment = "development"
+    Name        = "${var.ec2_name_prefix} ${count.index + 1}"
+    environment = var.environment
   }
-}
-
-resource "aws_instance" "app-server-02" {
-  ami             = "ami-085ad6ae776d8f09c" # Amazon Linux 2 AMI
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.public_b.id
-  key_name        = "server-key"
-  security_groups = [aws_security_group.vpc.id]
-  monitoring      = true
-  user_data = file("${path.module}/user_data.sh")
-  tags = {
-    Name        = "web-server-east-1b"
-    environment = "development"
-  }
-}
+} 
