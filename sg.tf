@@ -15,7 +15,7 @@ resource "aws_security_group" "vpc" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["161.10.52.6/32"]
+    cidr_blocks = ["<YOUR_IP_ADDRESS>/32"] # Replace with your IP address
   }
   egress {
     from_port   = 0
